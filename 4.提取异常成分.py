@@ -26,11 +26,11 @@ son_sequence = data_d_tk.copy().reshape(96, -1)  # 重塑为(96,天数)矩阵
 sequence_len = son_sequence.shape[-1]  # 获取周期天数（列数）
 
 # 季节分量计算（注意此处实际使用均值，建议修改为np.median）
-column_medians = np.mean(son_sequence, axis=1)  # 计算每个时间点的均值
-column_medians = column_medians[:, np.newaxis]  # 转换为列向量
+column_means = np.mean(son_sequence, axis=1)  # 计算每个时间点的均值
+column_means = column_means[:, np.newaxis]  # 转换为列向量
 
 # 季节分量重构
-sk = np.tile(column_medians, (1, sequence_len)).T.reshape(-1)  # 延展为完整序列
+sk = np.tile(column_means, (1, sequence_len)).T.reshape(-1)  # 延展为完整序列
 
 # 残差分量计算
 rk = data_d_tk / sk  # 残差 = 去趋势信号 / 季节分量
@@ -50,7 +50,7 @@ sorted_data = sorted(rou_k, reverse=True)  # 降序排列离差值
 rou_c = sorted_data[int(0.05*len(sorted_data))-1]  # 取前5%作为异常阈值
 
 # 生成异常指示向量
-ak = rou_k.copy()  # 创建副本
+ak = rk.copy()  # 创建副本
 ak[np.where(rou_k < rou_c)] = 1  # 正常点标记为1
 rk[np.where(rou_k >= rou_c)] = 1  # 异常点残差设为1（需验证逻辑合理性）
 
