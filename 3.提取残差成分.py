@@ -25,11 +25,11 @@ son_sequence = data_d_tk.copy().reshape(96, -1)  # 重塑为(96,天数)矩阵
 sequence_len = son_sequence.shape[-1]  # 获取周期天数（列数）
 
 # 季节分量计算（行中位数）
-column_medians = np.mean(son_sequence, axis=1)  # 计算每个时间点的平均值
-column_medians = column_medians[:, np.newaxis]  # 转换为列向量便于矩阵运算
+column_means = np.mean(son_sequence, axis=1)  # 计算每个时间点的平均值
+column_means = column_means[:, np.newaxis]  # 转换为列向量便于矩阵运算
 
 # 季节分量重构
-sk = np.tile(column_medians, (1, sequence_len)).T.reshape(-1)  # 延展中位数序列
+sk = np.tile(column_means, (1, sequence_len)).T.reshape(-1)  # 延展中位数序列
 # 操作分解：
 # 1. np.tile复制列向量为(96,天数)矩阵
 # 2. .T转置为(天数,96)
